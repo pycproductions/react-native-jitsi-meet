@@ -10,6 +10,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.UiThreadUtil;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableMapKeySetIterator;
 
 @ReactModule(name = RNJitsiMeetModule.MODULE_NAME)
 public class RNJitsiMeetModule extends ReactContextBaseJavaModule {
@@ -32,7 +33,7 @@ public class RNJitsiMeetModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void call(String url, ReadableMap userInfo) {
+    public void call(String url, ReadableMap userInfo,ReadableMap meetOptions,ReadableMap featureFlags) {
         UiThreadUtil.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -53,11 +54,41 @@ public class RNJitsiMeetModule extends ReactContextBaseJavaModule {
                             }
                           }
                     }
+                    
                     RNJitsiMeetConferenceOptions options = new RNJitsiMeetConferenceOptions.Builder()
                             .setRoom(url)
                             .setAudioOnly(false)
                             .setUserInfo(_userInfo)
+
+                        .setFeatureFlag("call-integration.enabled", false)
+                        .setFeatureFlag("resolution", 360)
+                        .setFeatureFlag("chat.enabled", false)
+                        .setFeatureFlag("add-people.enabled", false)
+                        .setFeatureFlag("invite.enabled", false)
+                        .setFeatureFlag("kick-out.enabled", false)
+                        .setFeatureFlag("live-streaming.enabled", false)
+                        .setFeatureFlag("raise-hand.enabled", false)
+                        //.setFeatureFlag("meeting-password.enabled", false)
+                        .setFeatureFlag("recording.enabled", false)
+
+                        .setFeatureFlag("server-url-change.enabled", false)
+                        .setFeatureFlag("security-options.enabled", false)
+                        .setFeatureFlag("video-share.enabled", false)
+                        .setFeatureFlag("notifications.enabled", false)
                             .build();
+                            /*
+                            RNJitsiMeetConferenceOptions.Builder optionsBuilder = new RNJitsiMeetConferenceOptions.Builder()
+                            .setRoom(url)
+                            .setAudioOnly(false)
+                            .setVideoMuted(true)
+                            .setUserInfo(_userInfo);
+
+                    ReadableMapKeySetIterator iterator = featureFlags.keySetIterator();
+                    while (iterator.hasNextKey()) {
+                        String key = iterator.nextKey();
+                        optionsBuilder.setFeatureFlag(key, featureFlags.getBoolean(key));
+                    }
+                    RNJitsiMeetConferenceOptions options = optionsBuilder.build();*/
                     mJitsiMeetViewReference.getJitsiMeetView().join(options);
                 }
             }
@@ -65,7 +96,7 @@ public class RNJitsiMeetModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void audioCall(String url, ReadableMap userInfo) {
+    public void audioCall(String url, ReadableMap userInfo, ReadableMap meetOptions,ReadableMap meetFeatureFlags) {
         UiThreadUtil.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -90,6 +121,15 @@ public class RNJitsiMeetModule extends ReactContextBaseJavaModule {
                             .setRoom(url)
                             .setAudioOnly(true)
                             .setUserInfo(_userInfo)
+                        .setFeatureFlag("chat.enabled", false)
+                        .setFeatureFlag("add-people.enabled", false)
+                        .setFeatureFlag("invite.enabled", false)
+                        .setFeatureFlag("kick-out.enabled", false)
+                        .setFeatureFlag("live-streaming.enabled", false)
+                        .setFeatureFlag("meeting-password.enabled", false)
+                        .setFeatureFlag("recording.enabled", false)
+                        .setFeatureFlag("server-url-change.enabled", false)
+
                             .build();
                     mJitsiMeetViewReference.getJitsiMeetView().join(options);
                 }

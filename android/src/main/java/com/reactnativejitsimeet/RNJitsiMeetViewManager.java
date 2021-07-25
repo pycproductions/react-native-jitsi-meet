@@ -70,11 +70,31 @@ public class RNJitsiMeetViewManager extends SimpleViewManager<RNJitsiMeetView> i
                 event);
     }
 
+    public void onAudioMutedChanged(Map<String, Object> data) {
+        WritableMap event = Arguments.createMap();
+        event.putString("url", (String) data.get("url"));
+        mReactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+                mJitsiMeetViewReference.getJitsiMeetView().getId(),
+                "audioMutedChanged",
+                event);
+    }
+
+    public void onVideoMutedChanged(Map<String, Object> data) {
+        WritableMap event = Arguments.createMap();
+        event.putString("url", (String) data.get("url"));
+        mReactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+                mJitsiMeetViewReference.getJitsiMeetView().getId(),
+                "videoMutedChanged",
+                event);
+    }
+
     public Map getExportedCustomBubblingEventTypeConstants() {
         return MapBuilder.builder()
                 .put("conferenceJoined", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onConferenceJoined")))
                 .put("conferenceTerminated", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onConferenceTerminated")))
                 .put("conferenceWillJoin", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onConferenceWillJoin")))
+                .put("audioMutedChanged", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onConferenceWillJoin")))
+                .put("videoMutedChanged", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onConferenceWillJoin")))
                 .build();
     }
 }
